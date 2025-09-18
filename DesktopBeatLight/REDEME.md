@@ -138,3 +138,50 @@ DesktopBeatLight.UI/
    └─ AudioCaptureConfig.cs         // 音频捕获配置（采样率=44100Hz、缓冲区大小=1024）
 
 
+## Core 设计实体
+# 主题实体（ThemeType.cs）
+
+public class ThemeConfig
+{
+    
+    public int ThemeConfigId { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public bool IsDefault { get; set; } = false;
+
+
+   
+    public string PrimaryColor { get; set; } = "#FF4500"; 
+
+   
+    public string GradientEndColor { get; set; } = "#FFFF00"; 
+   
+    public string AccentColor { get; set; } = "#FFFFFF"; 
+
+    public string MuteColor { get; set; } = "#333333"; 
+
+
+    public int LightHeight { get; set; } = 8;
+
+
+    public LightPosition LightPosition { get; set; } = LightPosition.Bottom;
+
+    public int Brightness { get; set; } = 80;
+
+   
+    public int MuteBrightness { get; set; } = 20;
+
+
+    
+    public bool PauseOnMute { get; set; } = true;
+}
+# LightPosition.cs 枚举设计
+public enum LightPosition
+{
+    Bottom,  // 底部（默认）
+    Top,     // 顶部
+    Left,    // 左侧
+    Right    // 右侧
+}
+
