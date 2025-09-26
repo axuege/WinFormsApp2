@@ -71,4 +71,25 @@ public class ThemeConfig
     /// 静音时是否暂停渲染（true=仅显示静态静音色，false=继续响应但弱化）
     /// </summary>
     public bool PauseOnMute { get; set; } = true;
+    //无参构造
+    public ThemeConfig()
+    {
+
+    }
+    //全参构造
+    public ThemeConfig(int themeConfigId, string name, bool isDefault, string primaryColor, string gradientEndColor, string accentColor, string muteColor, int lightHeight, LightPosition lightPosition, int brightness, int muteBrightness, bool pauseOnMute)
+    {
+        ThemeConfigId = themeConfigId;
+        Name = name;
+        IsDefault = isDefault;
+        PrimaryColor = primaryColor;
+        GradientEndColor = gradientEndColor;
+        AccentColor = accentColor;
+        MuteColor = muteColor;
+        LightHeight = lightHeight;
+        LightPosition = lightPosition;
+        Brightness = brightness;
+        MuteBrightness = muteBrightness;
+        PauseOnMute = pauseOnMute;
+    }
 }
