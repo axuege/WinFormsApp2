@@ -38,6 +38,18 @@ mkdir DesktopBeatLight.Audio\Implementations
 mkdir DesktopBeatLight.Audio\Helpers
 mkdir DesktopBeatLight.Audio\Models
 
+# 添加项目间引用
+# UI 项目引用 Core 和 Audio
+dotnet add DesktopBeatLight.UI/DesktopBeatLight.UI.csproj reference DesktopBeatLight.Core/DesktopBeatLight.Core.csproj
+dotnet add DesktopBeatLight.UI/DesktopBeatLight.UI.csproj reference DesktopBeatLight.Audio/DesktopBeatLight.Audio.csproj
+
+# Audio 项目引用 Core 项目
+dotnet add DesktopBeatLight.Audio/DesktopBeatLight.Audio.csproj reference DesktopBeatLight.Core/DesktopBeatLight.Core.csproj
+
+# 在 tests 目录下，测试项目分别引用对应的主项目
+dotnet add DesktopBeatLight.Core.Tests/DesktopBeatLight.Core.Tests.csproj reference ../src/DesktopBeatLight.Core/DesktopBeatLight.Core.csproj
+dotnet add DesktopBeatLight.Audio.Tests/DesktopBeatLight.Audio.Tests.csproj reference ../src/DesktopBeatLight.Audio/DesktopBeatLight.Audio.csproj
+
 # 回到根目录
 cd ..
 
@@ -139,7 +151,7 @@ DesktopBeatLight.UI/
 
 
 ## Core 设计实体
-# 主题实体（ThemeType.cs）
+# 主题实体（ThemeConfig.cs）
 
 public class ThemeConfig
 {
@@ -184,4 +196,8 @@ public enum LightPosition
     Left,    // 左侧
     Right    // 右侧
 }
+# 定义数据库上下文（AppDbContext.cs）
+using Microsoft.EntityFrameworkCore;
+using DesktopBeatLight.Core.Models;
+
 
