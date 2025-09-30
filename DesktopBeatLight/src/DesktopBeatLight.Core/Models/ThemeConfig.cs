@@ -1,10 +1,17 @@
 //引用命名空间
 using DesktopBeatLight.Core.Models.Enums;
+using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 //命名空间: DesktopBeatLight.Core.Models
 namespace DesktopBeatLight.Core.Models;
 // 主题配置类
 public class ThemeConfig
 {
+    //主键
+    [Key] 
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // 自增ID
     // 1. 主题基础标识（核心字段）
     /// <summary>
     /// 主题唯一标识（内置主题用固定ID，用户自定义主题自增）
@@ -14,6 +21,10 @@ public class ThemeConfig
     /// <summary>
     /// 主题名称（如"火焰红"、"深海蓝"）
     /// </summary>
+    // 非空
+    [Required]
+    //限制长度
+    [MaxLength(50)] 
     public string Name { get; set; } = string.Empty;
 
     /// <summary>

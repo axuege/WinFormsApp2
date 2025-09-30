@@ -24,7 +24,7 @@ public class ThemeConfigRepository : IThemeConfigRepository
         // 检查取消令牌
         cancellationToken.ThrowIfCancellationRequested();
         // 从数据库中异步获取所有主题配置
-        return await _dbContext.themeConfigs.ToListAsync(cancellationToken);
+        return await _dbContext.ThemeConfigs.ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class ThemeConfigRepository : IThemeConfigRepository
         //检查取消令牌
         cancellationToken.ThrowIfCancellationRequested();
         //从数据库中异步获取指定ID的主题配置
-        return await _dbContext.themeConfigs
+        return await _dbContext.ThemeConfigs
             .FirstOrDefaultAsync(t => t.ThemeConfigId == themeConfigId, cancellationToken);
     }
 
@@ -56,11 +56,11 @@ public class ThemeConfigRepository : IThemeConfigRepository
         if (themeConfig.IsDefault)
         {
             // 查找所有当前设置为默认的主题
-            var others = await _dbContext.themeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
+            var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
             others.ForEach(t => t.IsDefault = false);
         }
         // 添加新主题配置到数据库
-        await _dbContext.themeConfigs.AddAsync(themeConfig, cancellationToken);
+        await _dbContext.ThemeConfigs.AddAsync(themeConfig, cancellationToken);
         // 保存更改
         await _dbContext.SaveChangesAsync(cancellationToken);
         return themeConfig;
@@ -77,14 +77,14 @@ public class ThemeConfigRepository : IThemeConfigRepository
         //检查取消令牌
         cancellationToken.ThrowIfCancellationRequested();
         // 检查主题配置是否存在
-        var exists = await _dbContext.themeConfigs
+        var exists = await _dbContext.ThemeConfigs
             .AnyAsync(t => t.ThemeConfigId == themeConfig.ThemeConfigId, cancellationToken);
         if (!exists) return false;
         // 如果设置为默认主题，先取消其他默认
         if (themeConfig.IsDefault)
         {
             // 查找所有当前设置为默认的主题
-            var others = await _dbContext.themeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
+            var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
             others.ForEach(t => t.IsDefault = false);
         }
         // 更新主题配置
@@ -104,11 +104,11 @@ public class ThemeConfigRepository : IThemeConfigRepository
         //检查取消令牌
         cancellationToken.ThrowIfCancellationRequested();
         // 查找要删除的主题配置
-        var themeConfig = await _dbContext.themeConfigs
+        var themeConfig = await _dbContext.ThemeConfigs
             .FirstOrDefaultAsync(t => t.ThemeConfigId == themeConfigId, cancellationToken);
         if (themeConfig == null) return false;
         // 删除主题配置
-        _dbContext.themeConfigs.Remove(themeConfig);
+        _dbContext.ThemeConfigs.Remove(themeConfig);
         // 保存更改
         return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
 
@@ -125,12 +125,12 @@ public class ThemeConfigRepository : IThemeConfigRepository
         //检查取消令牌
         cancellationToken.ThrowIfCancellationRequested();
         // 查找要设置为默认的主题配置
-        var theme = await _dbContext.themeConfigs
+        var theme = await _dbContext.ThemeConfigs
             .FindAsync(new object[] { themeConfigId }, cancellationToken);
         // 如果未找到，返回 false
         if (theme == null) return false;
         // 取消其他主题的默认设置
-        var others = await _dbContext.themeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
+        var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
         others.ForEach(t => t.IsDefault = false);
         // 设置指定主题为默认
         theme.IsDefault = true;

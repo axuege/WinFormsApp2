@@ -28,5 +28,6 @@ services.AddScoped<Form1>();
 
 // 5. 构建容器并启动
 using var serviceProvider = services.BuildServiceProvider();
+
 ApplicationConfiguration.Initialize();
 Application.Run(serviceProvider.GetRequiredService<Form1>());
