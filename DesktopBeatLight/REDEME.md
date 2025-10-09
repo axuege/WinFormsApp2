@@ -148,7 +148,10 @@ DesktopBeatLight.UI/
 │  └─ SilenceDetector.cs            // 静音检测（RMS 能量计算，阈值=-40dB）
 └─ Models/                          // 音频实体（仅音频层使用，不跨层）
    └─ AudioCaptureConfig.cs         // 音频捕获配置（采样率=44100Hz、缓冲区大小=1024）
-
+# 数据库迁移
+dotnet ef migrations add [迁移名称] --context AppDbContext
+# 更新迁移
+dotnet ef database update --context AppDbContext
 
 ## Core 设计实体
 # 主题实体（ThemeConfig.cs）
