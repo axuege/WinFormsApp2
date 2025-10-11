@@ -1,36 +1,57 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using DesktopBeatLight.Core.Data;
 using DesktopBeatLight.Core.Abstractions;
 using DesktopBeatLight.Core.IMplementations.ThemeRenderers;
 using DesktopBeatLight.UI;
-using System;
-using System.Windows.Forms;
 using DesktopBeatLight.Audio.Implementations;
 using DesktopBeatLight.Audio.Abstractions;
+using DesktopBeatLight.Core.IMplementations;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using DesktopBeatLight.Core.Data;
 
 var services = new ServiceCollection();
 
-// 1. ¼ÓÔØÅäÖÃ
+// 1. é…ç½®ç®¡ç†
 var configuration = new ConfigurationBuilder()
     .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)  // è®¾ç½®ä¸ºå¿…éœ€
     .Build();
 
-// 2. ×¢²á DbContext
-services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+services.AddSingleton<IConfiguration>(configuration);
 
-// 3. ×¢²á²Ö´¢
+// 2. é…ç½®æ•°æ®åº“ä¸Šä¸‹æ–‡
+services.AddDbContext<AppDbContext>(options =>
+{
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(connectionString);
+});
+
+// 3. æ³¨å†Œæ•°æ®è®¿é—®å­˜å‚¨åº“
 services.AddScoped<IThemeConfigRepository, ThemeConfigRepository>();
-services.AddScoped<IAudioCapture, WasapiAudioCapture>();
-// 4. ×¢²á´°Ìå
+
+// 4. æ³¨å†Œä¸»é¢˜æ¸²æŸ“å™¨ï¼ˆä½¿ç”¨å·¥å‚æ¨¡å¼ï¼‰
+services.AddSingleton<Func<string, IThemeRenderer>>(provider => themeName =>
+{
+    switch (themeName.ToLower())
+    {
+        case "ocean":
+            return new OceanThemeRenderer();
+        case "neon":
+            return new NeonThemeRenderer();
+        case "fire":
+        default:
+            return new FireThemeRenderer();
+    }
+});
+
+// 5. æ³¨å†Œæ ¸å¿ƒæœåŠ¡
+services.AddSingleton<FftAnalyzer>();
+services.AddSingleton<IAudioCapture, WasapiAudioCapture>();
+
+// 6. æ³¨å†ŒUIç»„ä»¶
 services.AddScoped<Form1>();
 
-// 5. ¹¹½¨ÈİÆ÷²¢Æô¶¯
+// 5. æ„å»ºæœåŠ¡æä¾›ç¨‹åºå¹¶è¿è¡Œåº”ç”¨ç¨‹åº
 using var serviceProvider = services.BuildServiceProvider();
-// È·±£Êı¾İ¿â´´½¨
 ApplicationConfiguration.Initialize();
-// È·±£Êı¾İ¿â´´½¨
 Application.Run(serviceProvider.GetRequiredService<Form1>());

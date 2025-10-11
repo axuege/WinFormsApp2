@@ -1,13 +1,13 @@
 using DesktopBeatLight.Core.Models;
-using DesktopBeatLight.Core.Models.Enums;
 using DesktopBeatLight.Core.Abstractions;
 using DesktopBeatLight.Core.Data;
 using Microsoft.EntityFrameworkCore;
-namespace DesktopBeatLight.Core.IMplementations.ThemeRenderers;
+
+namespace DesktopBeatLight.Core.Data;
 
 public class ThemeConfigRepository : IThemeConfigRepository
 {
-    // ╥└└╡╫в╚ы╡─╩¤╛▌┐т╔╧╧┬╬─
+    // я┐╜я┐╜я┐╜я┐╜╫вя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜▌┐я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     private readonly AppDbContext _dbContext;
 
     public ThemeConfigRepository(AppDbContext dbContext)
@@ -15,126 +15,126 @@ public class ThemeConfigRepository : IThemeConfigRepository
         _dbContext = dbContext;
     }
     /// <summary>
-    /// ╗ё╚б╦∙╙╨╓ў╠т┼ф╓├
+    /// я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╓ў╠т┼ф╓├┴╨▒э</returns>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╨▒я┐╜</returns>
     public async Task<List<ThemeConfig>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        // ╝ь▓щ╚б╧√┴ю┼╞
+        // я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        // ┤╙╩¤╛▌┐т╓╨╥ь▓╜╗ё╚б╦∙╙╨╓ў╠т┼ф╓├
+        // я┐╜я┐╜я┐╜я┐╜я┐╜▌┐я┐╜я┐╜я┐╜я┐╜ь▓╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         return await _dbContext.ThemeConfigs.ToListAsync(cancellationToken);
     }
 
     /// <summary>
-    /// ╕∙╛▌ID╗ё╚б╓ў╠т┼ф╓├
+    /// я┐╜я┐╜я┐╜я┐╜IDя┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="themeConfigId">╓ў╠т┼ф╓├ID</param>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╡е╕Ў╓ў╠т┼ф╓├гм╚ч╣√╬┤╒╥╡╜╘Є╖╡╗╪ null</returns>
+    /// <param name="themeConfigId">я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ID</param>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜├гя┐╜я┐╜я┐╜я┐╜╬┤я┐╜╥╡я┐╜я┐╜Є╖╡╗я┐╜ null</returns>
    public async Task<ThemeConfig?> GetByIdAsync(int themeConfigId, CancellationToken cancellationToken = default)
     {
-        //╝ь▓щ╚б╧√┴ю┼╞
+        //я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        //┤╙╩¤╛▌┐т╓╨╥ь▓╜╗ё╚б╓╕╢иID╡─╓ў╠т┼ф╓├
+        //я┐╜я┐╜я┐╜я┐╜я┐╜▌┐я┐╜я┐╜я┐╜я┐╜ь▓╜я┐╜я┐╜╚б╓╕я┐╜я┐╜IDя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         return await _dbContext.ThemeConfigs
             .FirstOrDefaultAsync(t => t.ThemeConfigId == themeConfigId, cancellationToken);
     }
 
     /// <summary>
-    /// ╠э╝╙╨┬╓ў╠т┼ф╓├
+    /// я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="themeConfig">╓ў╠т┼ф╓├╩╡╠х</param>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╠э╝╙║є╡─╓ў╠т┼ф╓├ги░№║м╩¤╛▌┐т╔·│╔╡─IDгй</returns>
+    /// <param name="themeConfig">я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╩╡я┐╜я┐╜</param>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜я┐╜я┐╜╙║я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜├гя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜▌┐я┐╜я┐╜я┐╜я┐╜╔╡я┐╜IDя┐╜я┐╜</returns>
     public async Task<ThemeConfig> AddAsync(ThemeConfig themeConfig, CancellationToken cancellationToken = default)
     {
-        //╝ь▓щ╚б╧√┴ю┼╞
+        //я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        // ╚ч╣√╔ш╓├╬к─м╚╧╓ў╠тгм╧╚╚б╧√╞ф╦√─м╚╧
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╬к─мя┐╜я┐╜я┐╜я┐╜я┐╜тгмя┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜─мя┐╜я┐╜
         if (themeConfig.IsDefault)
         {
-            // ▓щ╒╥╦∙╙╨╡▒╟░╔ш╓├╬к─м╚╧╡─╓ў╠т
+            // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╨╡я┐╜╟░я┐╜я┐╜я┐╜я┐╜╬к─мя┐╜╧╡я┐╜я┐╜я┐╜я┐╜я┐╜
             var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
             others.ForEach(t => t.IsDefault = false);
         }
-        // ╠э╝╙╨┬╓ў╠т┼ф╓├╡╜╩¤╛▌┐т
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜├╡я┐╜я┐╜я┐╜я┐╜▌┐я┐╜
         await _dbContext.ThemeConfigs.AddAsync(themeConfig, cancellationToken);
-        // ▒г┤ц╕№╕─
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         await _dbContext.SaveChangesAsync(cancellationToken);
         return themeConfig;
     }
 
     /// <summary>
-    /// ╕№╨┬╓ў╠т┼ф╓├
+    /// я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="themeConfig">╓ў╠т┼ф╓├╩╡╠х</param>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╩╟╖ё╕№╨┬│╔╣ж</returns>
+    /// <param name="themeConfig">я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╩╡я┐╜я┐╜</param>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜╟╖я┐╜я┐╜я┐╜┬│╔╣я┐╜</returns>
     public async Task<bool> UpdateAsync(ThemeConfig themeConfig, CancellationToken cancellationToken = default)
     {
-        //╝ь▓щ╚б╧√┴ю┼╞
+        //я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        // ╝ь▓щ╓ў╠т┼ф╓├╩╟╖ё┤ц╘┌
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╟╖я┐╜я┐╜я┐╜я┐╜
         var exists = await _dbContext.ThemeConfigs
             .AnyAsync(t => t.ThemeConfigId == themeConfig.ThemeConfigId, cancellationToken);
         if (!exists) return false;
-        // ╚ч╣√╔ш╓├╬к─м╚╧╓ў╠тгм╧╚╚б╧√╞ф╦√─м╚╧
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╬к─мя┐╜я┐╜я┐╜я┐╜я┐╜тгмя┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜─мя┐╜я┐╜
         if (themeConfig.IsDefault)
         {
-            // ▓щ╒╥╦∙╙╨╡▒╟░╔ш╓├╬к─м╚╧╡─╓ў╠т
+            // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╨╡я┐╜╟░я┐╜я┐╜я┐╜я┐╜╬к─мя┐╜╧╡я┐╜я┐╜я┐╜я┐╜я┐╜
             var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
             others.ForEach(t => t.IsDefault = false);
         }
-        // ╕№╨┬╓ў╠т┼ф╓├
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         _dbContext.Entry(themeConfig).State = EntityState.Modified;
-        // ▒г┤ц╕№╕─
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 
     /// <summary>
-    /// ╔╛│¤╓ў╠т┼ф╓├
+    /// ╔╛я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="themeConfigId">╓ў╠т┼ф╓├ID</param>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╩╟╖ё╔╛│¤│╔╣ж</returns>
+    /// <param name="themeConfigId">я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ID</param>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜╟╖я┐╜╔╛я┐╜я┐╜я┐╜╔╣я┐╜</returns>
     public async Task<bool> DeleteAsync(int themeConfigId, CancellationToken cancellationToken = default)
     {
-        //╝ь▓щ╚б╧√┴ю┼╞
+        //я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        // ▓щ╒╥╥к╔╛│¤╡─╓ў╠т┼ф╓├
+        // я┐╜я┐╜я┐╜я┐╜╥к╔╛я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         var themeConfig = await _dbContext.ThemeConfigs
             .FirstOrDefaultAsync(t => t.ThemeConfigId == themeConfigId, cancellationToken);
         if (themeConfig == null) return false;
-        // ╔╛│¤╓ў╠т┼ф╓├
+        // ╔╛я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         _dbContext.ThemeConfigs.Remove(themeConfig);
-        // ▒г┤ц╕№╕─
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
 
     }
 
     /// <summary>
-    /// ╔ш╓├─м╚╧╓ў╠т
+    /// я┐╜я┐╜я┐╜я┐╜─мя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
     /// </summary>
-    /// <param name="themeConfigId">╥к╔ш╓├╬к─м╚╧╡─╓ў╠тID</param>
-    /// <param name="cancellationToken">╚б╧√┴ю┼╞</param>
-    /// <returns>╩╟╖ё╔ш╓├│╔╣ж</returns>
+    /// <param name="themeConfigId">╥кя┐╜я┐╜я┐╜я┐╜╬к─мя┐╜╧╡я┐╜я┐╜я┐╜я┐╜я┐╜ID</param>
+    /// <param name="cancellationToken">╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜</param>
+    /// <returns>я┐╜╟╖я┐╜я┐╜я┐╜я┐╜├│╔╣я┐╜</returns>
    public async Task<bool> SetDefaultAsync(int themeConfigId, CancellationToken cancellationToken = default)
     {
-        //╝ь▓щ╚б╧√┴ю┼╞
+        //я┐╜я┐╜я┐╜╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         cancellationToken.ThrowIfCancellationRequested();
-        // ▓щ╒╥╥к╔ш╓├╬к─м╚╧╡─╓ў╠т┼ф╓├
+        // я┐╜я┐╜я┐╜я┐╜╥кя┐╜я┐╜я┐╜я┐╜╬к─мя┐╜╧╡я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         var theme = await _dbContext.ThemeConfigs
             .FindAsync(new object[] { themeConfigId }, cancellationToken);
-        // ╚ч╣√╬┤╒╥╡╜гм╖╡╗╪ false
+        // я┐╜я┐╜я┐╜╬┤я┐╜╥╡я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜ false
         if (theme == null) return false;
-        // ╚б╧√╞ф╦√╓ў╠т╡──м╚╧╔ш╓├
+        // ╚бя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜─мя┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         var others = await _dbContext.ThemeConfigs.Where(t => t.IsDefault).ToListAsync(cancellationToken);
         others.ForEach(t => t.IsDefault = false);
-        // ╔ш╓├╓╕╢и╓ў╠т╬к─м╚╧
+        // я┐╜я┐╜я┐╜я┐╜╓╕я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜╬к─мя┐╜я┐╜
         theme.IsDefault = true;
-        // ▒г┤ц╕№╕─
+        // я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜я┐╜
         return await _dbContext.SaveChangesAsync(cancellationToken) > 0;
     }
 }

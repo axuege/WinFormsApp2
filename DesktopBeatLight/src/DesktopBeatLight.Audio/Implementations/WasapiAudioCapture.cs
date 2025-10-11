@@ -2,50 +2,67 @@ using DesktopBeatLight.Audio.Abstractions;
 using NAudio.Wave;
 using System;
 using System.Threading.Tasks;
+using DesktopBeatLight.Audio.Helpers;
 
 namespace DesktopBeatLight.Audio.Implementations;
 
 public class WasapiAudioCapture : IAudioCapture
 {
-    // NAudio µÄÒôÆµ²¶»ñ¶ÔÏó
+    // NAudio éŸ³é¢‘æ•è·å¯¹è±¡
     private WasapiLoopbackCapture? _capture;
-    // ÒôÆµÊı¾İ¿ÉÓÃÊÂ¼ş
+    // éŸ³é¢‘æ•°æ®äº‹ä»¶è®¢é˜…
     public event Action<ReadOnlySpan<float>>? AudioDataAvailable;
-    // ÊÇ·ñ¾²Òô
+    // æ˜¯å¦é™éŸ³
     public bool IsMuted { get; private set; }
+    // é™éŸ³æ£€æµ‹é˜ˆå€¼è®¾ä¸º-40 dBFS
+    private readonly SilenceDetector _silenceDetector = new SilenceDetector(-40);
+    // é™éŸ³å¸§è®¡æ•°å™¨
+    private int _silentFrameCount = 0;
 
-    // ¿ªÊ¼²¶»ñÒôÆµ
+    // å¼€å§‹éŸ³é¢‘æ•è·
     public async Task StartCapture()
     {
-        // Í£Ö¹ÒÑÓĞ²¶»ñ
+        // åœæ­¢å·²æœ‰æ•è·
         if (_capture != null)
         {
             await StopCapture();
         }
-        // ´´½¨ĞÂµÄ²¶»ñÊµÀı
+        // åˆ›å»ºæ–°çš„æ•è·å®ä¾‹
         _capture = new WasapiLoopbackCapture();
 
-        // ×¢²áÊı¾İ»Øµ÷
+        // æ³¨å†Œæ•°æ®å›è°ƒ
         _capture.DataAvailable += OnDataAvailable;
 
-        // ¿ªÊ¼²¶»ñ
+        // å¼€å§‹æ•è·
         _capture.StartRecording();
-        await Task.Yield(); // Òì²½·µ»Ø
+        await Task.Yield(); // å¼‚æ­¥è¿”å›
     }
-    // Êı¾İ¿ÉÓÃÊ±µÄ»Øµ÷
-    private void OnDataAvailable(object? sender, WaveInEventArgs e)
+    // æ•°æ®åˆ°è¾¾æ—¶çš„å›è°ƒ
+    private async void OnDataAvailable(object? sender, WaveInEventArgs e)
     {
+        // ç©ºæ£€æŸ¥
         if (_capture == null) return;
 
-        // ×ª»»Îª float Êı×é
-        var format = _capture.WaveFormat;
-        int floatCount = e.BytesRecorded / 4; // ¼ÙÉèÊÇ 32-bit float
-        float[] floatBuffer = new float[floatCount];
-        Buffer.BlockCopy(e.Buffer, 0, floatBuffer, 0, e.BytesRecorded);
+        // è½¬æ¢ä¸ºå•å£°é“æµ®ç‚¹æ•°æ®
+        var floatBuffer = await ConvertToMonoFloatAsync(e.Buffer, e.BytesRecorded, _capture.WaveFormat);
 
+        // é™éŸ³æ£€æµ‹
+        bool isSilent = _silenceDetector.IsSilent(floatBuffer);
+        if (isSilent)
+        {
+            _silentFrameCount++;
+            IsMuted = _silentFrameCount >= 100; // 100å¸§*20ms=2ç§’
+        }
+        else
+        {
+            _silentFrameCount = 0;
+            IsMuted = false;
+        }
+
+        // è§¦å‘éŸ³é¢‘æ•°æ®äº‹ä»¶ä¾›FFTå¤„ç†ä½¿ç”¨
         AudioDataAvailable?.Invoke(floatBuffer);
     }
-    // Í£Ö¹²¶»ñÒôÆµ
+    // åœæ­¢éŸ³é¢‘æ•è·
     public async Task StopCapture()
     {
         if (_capture != null)
@@ -57,12 +74,47 @@ public class WasapiAudioCapture : IAudioCapture
         }
         await Task.Yield();
     }
-    // ÊÍ·Å×ÊÔ´
-    public Task Dispose() => StopCapture();
-    // »ñÈ¡ÆµÆ×Êı¾İ£¨¼òµ¥ÊµÏÖ£¬Êµ¼ÊÓ¦ÓÃÖĞĞèÒªFFTµÈ·ÖÎö£©
-    public Task<float[]> GetSpectrumData()
+    // é‡Šæ”¾èµ„æº - æ˜¾å¼å®ç°IDisposableæ¥å£
+    public async void Dispose()
     {
-        // ¼òµ¥ÊµÏÖ£¬Êµ¼ÊÓ¦ÓÃÖĞĞèÒª½øĞĞFFTµÈÆµÆ×·ÖÎö
-        return Task.FromResult(new float[128]);
+        await StopCapture();
+        GC.SuppressFinalize(this);
+    }
+    
+    // å°†å­—èŠ‚æ•°æ®è½¬æ¢ä¸ºå•å£°é“æµ®ç‚¹æ•°æ® - å…¬å¼€å¼‚æ­¥æ–¹æ³•å®ç°æ¥å£
+    public Task<float[]> ConvertToMonoFloatAsync(byte[] buffer, int bytesRecorded, WaveFormat format)
+    {
+        // ä½¿ç”¨Task.Runåœ¨åå°çº¿ç¨‹æ‰§è¡ŒCPUå¯†é›†å‹æ“ä½œ
+        return Task.Run(() =>
+        {
+            int sampleCount = bytesRecorded / 2; // æ¯æ ·æœ¬2å­—èŠ‚
+            float[] samples = new float[sampleCount];
+            
+            // å°†å­—èŠ‚æ•°æ®è½¬æ¢ä¸ºæµ®ç‚¹æ•°ç»„
+            for (int i = 0; i < sampleCount; i++)
+            {
+                samples[i] = BitConverter.ToInt16(buffer, i * 2) / 32768f; // å½’ä¸€åŒ–åˆ°-1~1
+            }
+
+            // å¦‚æœæ˜¯ç«‹ä½“å£°ï¼Œå°†å·¦å³å£°é“æ··åˆä¸ºå•å£°é“
+            if (format.Channels == 2)
+            {
+                float[] monoSamples = new float[sampleCount / 2];
+                for (int i = 0; i < monoSamples.Length; i++)
+                {
+                    monoSamples[i] = (samples[i * 2] + samples[i * 2 + 1]) / 2; // å£°é“å¹³å‡
+                }
+                return monoSamples;
+            }
+            
+            return samples;
+        });
+    }
+
+    // ä¸ºäº†å…¼å®¹æ—§ä»£ç ï¼Œå¯ä»¥ä¿ç•™åŒæ­¥ç‰ˆæœ¬ä½†æ ‡è®°ä¸ºè¿‡æ—¶
+    [Obsolete("è¯·ä½¿ç”¨ConvertToMonoFloatAsyncä»£æ›¿")]
+    public float[] ConvertToMonoFloat(byte[] buffer, int bytesRecorded, WaveFormat format)
+    {
+        return ConvertToMonoFloatAsync(buffer, bytesRecorded, format).Result;
     }
 }

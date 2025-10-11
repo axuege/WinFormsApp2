@@ -1,93 +1,92 @@
-//ÒýÓÃÃüÃû¿Õ¼ä
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½
 using DesktopBeatLight.Core.Models.Enums;
-using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-//ÃüÃû¿Õ¼ä: DesktopBeatLight.Core.Models
+//ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½: DesktopBeatLight.Core.Models
 namespace DesktopBeatLight.Core.Models;
-// Ö÷ÌâÅäÖÃÀà
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 public class ThemeConfig
 {
-    //Ö÷¼ü
+    //ï¿½ï¿½ï¿½ï¿½
     [Key] 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ×ÔÔöID
-    // 1. Ö÷Ìâ»ù´¡±êÊ¶£¨ºËÐÄ×Ö¶Î£©
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ï¿½ï¿½ï¿½ï¿½ID
+    // 1. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½
     /// <summary>
-    /// Ö÷ÌâÎ¨Ò»±êÊ¶£¨ÄÚÖÃÖ÷ÌâÓÃ¹Ì¶¨ID£¬ÓÃ»§×Ô¶¨ÒåÖ÷Ìâ×ÔÔö£©
+    /// ï¿½ï¿½ï¿½ï¿½Î¨Ò»ï¿½ï¿½Ê¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹Ì¶ï¿½IDï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public int ThemeConfigId { get; set; }
 
     /// <summary>
-    /// Ö÷ÌâÃû³Æ£¨Èç"»ðÑæºì"¡¢"Éîº£À¶"£©
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½"ï¿½îº£ï¿½ï¿½"ï¿½ï¿½
     /// </summary>
-    // ·Ç¿Õ
+    // ï¿½Ç¿ï¿½
     [Required]
-    //ÏÞÖÆ³¤¶È
+    //ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½
     [MaxLength(50)] 
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// ÊÇ·ñÎªÏµÍ³Ä¬ÈÏÖ÷Ìâ£¨½öÒ»¸öÄ¬ÈÏÖ÷Ìâ£¬ÓÃÓÚ³õÊ¼»¯£©
+    /// ï¿½Ç·ï¿½ÎªÏµÍ³Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½â£¨ï¿½ï¿½Ò»ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½â£¬ï¿½ï¿½ï¿½Ú³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public bool IsDefault { get; set; } = false;
 
 
-    // 2. Ö÷ÌâÑÕÉ«ÅäÖÃ£¨Õë¶Ô¶¯Ì¬äÖÈ¾£¬¶ø·Ç¾²Ì¬±³¾°£©
+    // 2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½Ô¶ï¿½Ì¬ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// <summary>
-    /// Ö÷É«µ÷£¨µÆ´ø»ù´¡É«£¬Èç»ðÑæÖ÷ÌâµÄºìÉ«£©
+    /// ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½É«ï¿½ï¿½
     /// </summary>
-    public string PrimaryColor { get; set; } = "#FF4500"; // Ä¬ÈÏ³ÈÉ«£¨Ê¾Àý£©
+    public string PrimaryColor { get; set; } = "#FF4500"; // Ä¬ï¿½Ï³ï¿½É«ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
     /// <summary>
-    /// ½¥±äÖÕµãÉ«£¨ÓëÖ÷É«µ÷ÐÎ³É½¥±ä£¬Èç»ðÑæÖ÷ÌâµÄ»ÆÉ«£©
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½Î³É½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½É«ï¿½ï¿½
     /// </summary>
-    public string GradientEndColor { get; set; } = "#FFFF00"; // Ä¬ÈÏ»ÆÉ«£¨Ê¾Àý£©
+    public string GradientEndColor { get; set; } = "#FFFF00"; // Ä¬ï¿½Ï»ï¿½É«ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
     /// <summary>
-    /// Ç¿µ÷É«£¨·åÖµ¸ßÁÁÉ«£¬Èç×îÁÁµÄ°×É«£©
+    /// Ç¿ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä°ï¿½É«ï¿½ï¿½
     /// </summary>
-    public string AccentColor { get; set; } = "#FFFFFF"; // Ä¬ÈÏ°×É«£¨Ê¾Àý£©
+    public string AccentColor { get; set; } = "#FFFFFF"; // Ä¬ï¿½Ï°ï¿½É«ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
     /// <summary>
-    /// ¾²Òô×´Ì¬ÑÕÉ«£¨ÎÞÒôÆµÊ±µÄ»ù´¡É«£¬Í¨³£Îª°µÉ«£©
+    /// ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆµÊ±ï¿½Ä»ï¿½ï¿½ï¿½É«ï¿½ï¿½Í¨ï¿½ï¿½Îªï¿½ï¿½É«ï¿½ï¿½
     /// </summary>
-    public string MuteColor { get; set; } = "#333333"; // Ä¬ÈÏÉî»Ò£¨Ê¾Àý£©
+    public string MuteColor { get; set; } = "#333333"; // Ä¬ï¿½ï¿½ï¿½ï¿½Ò£ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 
 
-    // 3. µÆ´øÍâ¹ÛÅäÖÃ
+    // 3. ï¿½Æ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// <summary>
-    /// µÆ´ø¸ß¶È£¨ÏñËØ£¬·¶Î§ 4-32£¬Ä¬ÈÏ8£©
+    /// ï¿½Æ´ï¿½ï¿½ß¶È£ï¿½ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½Î§ 4-32ï¿½ï¿½Ä¬ï¿½ï¿½8ï¿½ï¿½
     /// </summary>
     public int LightHeight { get; set; } = 8;
 
     /// <summary>
-    /// µÆ´øÎ»ÖÃ£¨Ã¶¾Ù£ºBottom/Top/Left/Right£¬Ä¬ÈÏµ×²¿£©
+    /// ï¿½Æ´ï¿½Î»ï¿½Ã£ï¿½Ã¶ï¿½Ù£ï¿½Bottom/Top/Left/Rightï¿½ï¿½Ä¬ï¿½Ïµ×²ï¿½ï¿½ï¿½
     /// </summary>
     public LightPosition LightPosition { get; set; } = LightPosition.Bottom;
 
     /// <summary>
-    /// È«¾ÖÁÁ¶È£¨0-100£¬Ä¬ÈÏ80£©
+    /// È«ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½0-100ï¿½ï¿½Ä¬ï¿½ï¿½80ï¿½ï¿½
     /// </summary>
     public int Brightness { get; set; } = 80;
 
     /// <summary>
-    /// ¾²ÒôÊ±µÄÁÁ¶È£¨0-100£¬Ä¬ÈÏ20£¬Í¨³£µÍÓÚÕý³£ÁÁ¶È£©
+    /// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½0-100ï¿½ï¿½Ä¬ï¿½ï¿½20ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½
     /// </summary>
     public int MuteBrightness { get; set; } = 20;
 
 
-    // 4. ÐÐÎªÅäÖÃ
+    // 4. ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
     /// <summary>
-    /// ¾²ÒôÊ±ÊÇ·ñÔÝÍ£äÖÈ¾£¨true=½öÏÔÊ¾¾²Ì¬¾²ÒôÉ«£¬false=¼ÌÐøÏìÓ¦µ«Èõ»¯£©
+    /// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ç·ï¿½ï¿½ï¿½Í£ï¿½ï¿½È¾ï¿½ï¿½true=ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½false=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public bool PauseOnMute { get; set; } = true;
-    //ÎÞ²Î¹¹Ôì
+    //ï¿½Þ²Î¹ï¿½ï¿½ï¿½
     public ThemeConfig()
     {
 
     }
-    //È«²Î¹¹Ôì
+    //È«ï¿½Î¹ï¿½ï¿½ï¿½
     public ThemeConfig(int themeConfigId, string name, bool isDefault, string primaryColor, string gradientEndColor, string accentColor, string muteColor, int lightHeight, LightPosition lightPosition, int brightness, int muteBrightness, bool pauseOnMute)
     {
         ThemeConfigId = themeConfigId;

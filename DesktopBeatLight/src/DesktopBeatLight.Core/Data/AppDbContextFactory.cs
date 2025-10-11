@@ -8,7 +8,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        // ¹¹½¨ÅäÖÃ£¬Ö¸¶¨´Ó DesktopBeatLight.UI ÏîÄ¿µÄÊä³öÄ¿Â¼¶ÁÈ¡ appsettings.json
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ DesktopBeatLight.UI ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½È¡ appsettings.json
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../DesktopBeatLight.UI"))
             .AddJsonFile("appsettings.json", optional: false)
